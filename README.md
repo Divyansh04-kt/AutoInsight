@@ -13,9 +13,9 @@ The system analyzes the data, identifies patterns, and presents results in both 
 ## 🛠️ Technologies Used
 🔹 Backend
 
-   Python
+    Python
 
-   Flask
+    Flask
 
 🔹 Data Processing
 
