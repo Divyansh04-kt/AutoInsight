@@ -11,33 +11,15 @@ The system analyzes the data, identifies patterns, and presents results in both 
 4) To simplify data interpretation using AI-style explanations
 
 ## 🛠️ Technologies Used
-🔹 Backend
+🔹 Backend - Python, Flask
 
-    Python
+🔹 Data Processing - Pandas, NumPy
 
-    Flask
+🔹 Visualization - Matplotlib, Plotly
 
-🔹 Data Processing
+🔹 Report Generation - ReportLab
 
-   Pandas
-
-   NumPy
-
-🔹 Visualization
-
-   Matplotlib
-
-   Plotly
-
-🔹 Report Generation
-
-   ReportLab
-
-🔹 Frontend
-
-   HTML
-
-   CSS
+🔹 Frontend - HTML, CSS
 
 ## ⚙️ Features
 ✔ Upload CSV dataset
@@ -49,14 +31,10 @@ The system analyzes the data, identifies patterns, and presents results in both 
 ✔ Generate summary statistics (Total, Average, Min, Max)
 
 ✔ Create multiple graphs:
-
-   Line Chart
-   
-   Bar Chart
-   
-   Pie Chart
-   
-   Histogram
+Line Chart
+Bar Chart
+Pie Chart
+Histogram
    
 ✔ AI-based insights and explanations
 
