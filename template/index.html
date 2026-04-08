@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AutoInsight Dashboard</title>
+
+    <!-- Plotly -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            margin: 0;
+            color: white;
+        }
+
+        .container {
+            width: 85%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .upload-box {
+            background: white;
+            color: black;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background: #2a5298;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        select, input {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        .card {
+            background: white;
+            color: black;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            background: #eee;
+            margin: 5px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .chart-box {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>📊 AutoInsight Dashboard</h1>
+
+    <!-- Upload + Controls -->
+    <div class="upload-box">
+        <form method="POST" enctype="multipart/form-data">
+
+            <input type="file" name="file"><br><br>
+
+
+            <!-- ✅ NEW: Dropdown -->
+            {% if columns %}
+            <label>Select Column:</label>
+            <select name="column">
+                {% for col in columns %}
+                    <option value="{{ col }}" {% if col == selected_col %}selected{% endif %}>
+                        {{ col }}
+                    </option>
+                {% endfor %}
+            </select>
+            {% endif %}
+
+            <br>
+
+            <label>Min:</label>
+            <input type="number" step="any" name="min">
+
+            <label>Max:</label>
+            <input type="number" step="any" name="max">
+
+            <br><br>
+
+            <button type="submit">Upload & Analyze</button>
+
+            <button formaction="/download_pdf" formmethod="post">📄 Download PDF Report</button>
+
+        </form>
+    </div>
+
+    {% if columns %}
+    <div class="card">
+        <h2>📂 Columns</h2>
+        <ul>
+            {% for col in columns %}
+                <li>{{ col }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if summary %}
+    <div class="card">
+        <h2>📈 Analysis</h2>
+        <p>Total: {{ summary.Total }}</p>
+        <p>Average: {{ summary.Average }}</p>
+        <p>Max: {{ summary.Max }}</p>
+        <p>Min: {{ summary.Min }}</p>
+    </div>
+
+    {% if insights %}
+    <div class="card">
+        <h2>🧠 Auto Insights</h2>
+        <ul>
+            {% for i in insights %}
+                <li>{{ i }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if narrative %}
+    <div class="card">
+        <h2>🤖 AI Explanation</h2>
+        <p>{{ narrative }}</p>
+    </div>
+    {% endif %}
+
+    {% if correlation %}
+    <div class="card">
+        <h2>🔗 Correlation Insights</h2>
+        <ul>
+            {% for c in correlation %}
+                <li>{{ c }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Matplotlib Graphs -->
+    <div class="card grid">
+        <div>
+            <h3>📈 Line Chart</h3>
+            <img src="{{ url_for('static', filename='line.png') }}">
+        </div>
+
+        <div>
+            <h3>📊 Bar Chart</h3>
+            <img src="{{ url_for('static', filename='bar.png') }}">
+        </div>
+
+        <div>
+            <h3>🥧 Pie Chart</h3>
+            <img src="{{ url_for('static', filename='pie.png') }}">
+        </div>
+
+        <div>
+            <h3>📉 Histogram</h3>
+            <img src="{{ url_for('static', filename='hist.png') }}">
+        </div>
+    </div>
+
+    <!-- Plotly Dashboard -->
+    {% if graphs %}
+    <div class="card">
+        <h2>🚀 Interactive Dashboard</h2>
+        <div id="line_chart" class="chart-box"></div>
+        <div id="bar_chart" class="chart-box"></div>
+        <div id="pie_chart" class="chart-box"></div>
+        <div id="hist_chart" class="chart-box"></div>
+    </div>
+
+    <script>
+        var line = {{ graphs.line | tojson }};
+        var bar = {{ graphs.bar | tojson }};
+        var pie = {{ graphs.pie | tojson }};
+        var hist = {{ graphs.hist | tojson }};
+
+        Plotly.newPlot('line_chart', line.data, line.layout);
+        Plotly.newPlot('bar_chart', bar.data, bar.layout);
+        Plotly.newPlot('pie_chart', pie.data, pie.layout);
+        Plotly.newPlot('hist_chart', hist.data, hist.layout);
+    </script>
+    {% endif %}
+    
+    {% endif %}
+
+</div>
+
+</body>
+</html>
